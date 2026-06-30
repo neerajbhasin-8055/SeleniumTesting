@@ -83,5 +83,32 @@ public class Main {
         driver.switchTo().frame(iframe);
         driver.findElement(By.id("iframe-button")).click();
         driver.switchTo().defaultContent();
+
+        // ----DatePicker---
+
+        // one way
+        WebElement datePicker = driver.findElement(By.xpath("//input[@id = 'datepicker-input']"));
+//
+//        JavascriptExecutor js = (JavascriptExecutor) driver;
+//        js.executeScript(
+//                "arguments[0].removeAttribute('readonly');" +
+//                        "arguments[0].value='2026-07-15';" +
+//                        "arguments[0].dispatchEvent(new Event('change'));" , datePicker
+//
+//        );
+
+        // another way
+        datePicker.click();
+        while(true){
+            String month = driver.findElement(By.id("month-year-display")).getText();
+            if(month.equals("May 2027") ){
+                break;
+            }else{
+                driver.findElement(By.id("next-month")).click();
+            }
+        }
+        driver.findElement(By.xpath("//div[@id = 'days-grid']//div[text()='8']")).click();
+
+
     }
 }
