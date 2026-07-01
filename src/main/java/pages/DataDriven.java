@@ -40,8 +40,15 @@ public class DataDriven {
         Select sel = new Select(wait.waitForElementToBeVisible(selectElement));
         sel.selectByVisibleText(env);
     }
-    public void login(){
+    public void clickLogin(){
         wait.waitForElementToBeClickable(loginBtn).click();
+    }
+
+    public void login(String user, String pass, String env){
+        enterUsername(user);
+        enterPassword(pass);
+        selectDropdown(env);
+        clickLogin();
     }
 
 }
