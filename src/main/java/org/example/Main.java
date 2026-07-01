@@ -3,7 +3,14 @@ package org.example;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.time.Duration;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
@@ -109,6 +116,47 @@ public class Main {
         }
         driver.findElement(By.xpath("//div[@id = 'days-grid']//div[text()='8']")).click();
 
+        // --- WebDriver waits ---
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        driver.findElement(By.id("start-wait-btn")).click();
+        WebElement hiddenBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("hidden-target-btn")));
+        hiddenBtn.click();
+
+        // ---Shadow Dom---
+        WebElement shadowRoot = driver.findElement(By.id("shadow-host"));
+        SearchContext shadowHost = shadowRoot.getShadowRoot();
+        shadowHost.findElement(By.id("shadow-target-btn")).click();
+
+        // --- Broken Links---
+        List<WebElement> links = driver.findElements(By.tagName("a"));
+        for(WebElement link : links){
+            link.click();
+            String href = link.getAttribute("href");
+
+            if(href == null || href.isEmpty()){
+                System.out.println("Url is empty");
+                continue;
+            }
+            try{
+                URL url = new URL(href);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setConnectTimeout(3000);
+                conn.connect();
+
+                int statusCode = conn.getResponseCode();
+                if(statusCode >= 400){
+                    System.out.println(url+": This link is broken because status code is: "+statusCode);
+                }else{
+                    System.out.println(url+": This link is valid because status code is: "+statusCode);
+                }
+            }catch (Exception e){
+                System.out.println(e.getMessage());
+            }
+            driver.switchTo().window(parent);
+
+        }
+
+        driver.quit();
 
     }
 }
