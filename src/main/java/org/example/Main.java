@@ -130,7 +130,7 @@ public class Main {
         // --- Broken Links---
         List<WebElement> links = driver.findElements(By.tagName("a"));
         for(WebElement link : links){
-            link.click();
+//            link.click();
             String href = link.getAttribute("href");
 
             if(href == null || href.isEmpty()){
@@ -153,7 +153,6 @@ public class Main {
                 System.out.println(e.getMessage());
             }
             driver.switchTo().window(parent);
-
         }
 
         driver.quit();
