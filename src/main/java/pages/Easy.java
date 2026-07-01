@@ -18,6 +18,8 @@ public class Easy {
         PageFactory.initElements(driver, this);
     }
 
+    // ========= LOCATORS =========
+
     @FindBy(id = "username")
     private WebElement username;
 
@@ -36,19 +38,61 @@ public class Easy {
     @FindBy(id = "country-select")
     private WebElement countryDropdown;
 
-    public void fillForm(String name) {
-        wait.waitForElementToBeVisible(username).sendKeys(name);
+    @FindBy(id = "res-1")
+    private WebElement resultBox1;
+
+    @FindBy(id = "res-2")
+    private WebElement resultBox2;
+
+    @FindBy(id = "res-3")
+    private WebElement resultBox3;
+
+
+    // ========= ACTION METHODS =========
+
+    public void enterUsername(String name) {
+        wait.waitForElementToBeVisible(username).clear();
+        username.sendKeys(name);
+    }
+
+    public void clickSubmit() {
         wait.waitForElementToBeClickable(submitBtn).click();
     }
 
-    public void selectGenderAndHobbies() {
+    public void fillForm(String name) {
+        enterUsername(name);
+        clickSubmit();
+    }
+
+    public void selectGender() {
         wait.waitForElementToBeClickable(maleRadio).click();
+    }
+
+    public void selectCoding() {
         wait.waitForElementToBeClickable(codingCheckbox).click();
+    }
+
+    public void selectReading() {
         wait.waitForElementToBeClickable(readingCheckbox).click();
     }
 
     public void selectCountry(String country) {
         Select select = new Select(wait.waitForElementToBeVisible(countryDropdown));
         select.selectByVisibleText(country);
+    }
+
+
+    // ========= VALIDATION METHODS =========
+
+    public String getFormResult() {
+        return wait.waitForElementToBeVisible(resultBox1).getText();
+    }
+
+    public String getGenderHobbyResult() {
+        return wait.waitForElementToBeVisible(resultBox2).getText();
+    }
+
+    public String getDropdownResult() {
+        return wait.waitForElementToBeVisible(resultBox3).getText();
     }
 }
